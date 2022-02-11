@@ -6,6 +6,6 @@ import View from './view.js';
 
 let app = new WeatherApp();
 let view = new View();
-let controller = new Controller(app);
+let controller = new Controller(app,view);
 app.attachObserver(view);
 controller.startListeningForEvents();

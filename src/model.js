@@ -25,28 +25,45 @@ class WeatherApp extends Observable{
 
     constructor(){
         super();
-        this.currentData = "";
-        this.isDataToShow = false;
+        this.currentData = {
+            mainWeather: "",
+            weatherDescription: "",
+            temperature: "",
+            humidity: "",
+            windSpeed: "",
+            state: "no-data",
+            
+        };
         this.weatherFacade = new FacadeWeather();     
     }
 
     lookForLocation(aLocationName){
+        this.currentData.state = "wait";
+        this.notifyObservers();
+
         this.weatherFacade.async_fetch(aLocationName)
             .then((response)=>{
-                this.currentData = this.processData(response);
+                this.currentData.state = "data";
+                this.processData(response);
+            }).catch(error => {
+                this.currentData.state = "no-data";
+            }).finally(()=>{
                 this.notifyObservers();
             });
     }
 
-    processData(weatherDataObject){
-        console.log(weatherDataObject);
-        return `${weatherDataObject.weather[0].main}: ${weatherDataObject.weather[0].description}`;
+    processData(weatherData){
+        console.log(weatherData);
+        this.currentData.mainWeather = weatherData.weather[0].main ?? 'unknown';
+        this.currentData.weatherDescription = weatherData.weather[0].description ?? 'unknown';
+        this.currentData.temperature = weatherData.main.temp ?? 'unknown';
+        this.currentData.humidity = weatherData.main.humidity ?? 'unknown';
+        this.currentData.windSpeed = weatherData.wind.speed ?? 'unknown';
     }
 
-    getCurrentWeatherData(){
+    getCurrentData(){
         return this.currentData;
     }
-
 }
 
 export default WeatherApp;

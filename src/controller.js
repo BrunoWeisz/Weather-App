@@ -1,10 +1,8 @@
-import WeatherApp from "./model.js";
-import View from "./view.js";
-
 class Controller {
 
-    constructor(aWeatherApp){
+    constructor(aWeatherApp,aView){
         this.app = aWeatherApp; 
+        this.view = aView;
         this.textareaElement = document.querySelector("#write-region");
         this.button = document.querySelector("button");
     }
